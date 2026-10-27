@@ -1,36 +1,19 @@
-; ions.mdp - CHARMM27力场专用离子添加参数
-; 用途：生成 .tpr 文件供 gmx genion 使用
-; 保存后运行：gmx grompp -f ions.mdp -c solv.gro -p topol.top -o ions.tpr
+integrator      = steep     ; 
+nsteps          = 50        ; 
+emtol           = 1000.0    ; 
 
-; ---------------------
-; 基本控制参数
-; ---------------------
+cutoff-scheme   = Verlet    ; 
+vdw-modifier    = Potential-shift ; 
+rlist           = 1.2       ; 
+rcoulomb        = 1.2       ; 
+rvdw            = 1.2       ; 
+coulombtype     = PME       ; 
+fourierspacing  = 0.12      ; 
+pme-order       = 4         ; 
 
-integrator      = steep     ; 算法：steep（最陡下降法，稳定性高）
-nsteps          = 50        ; 仅需少量步数（离子添加无需完整EM）
-emtol           = 1000.0    ; 宽松的力容差（快速完成）
+tcoupl          = no        ; 
+pcoupl          = no        ; 
 
-; ---------------------
-; 能量项设置（CHARMM27兼容）
-; ---------------------
-cutoff-scheme   = Verlet    ; 现代截断方案
-vdw-modifier    = Potential-shift ; CHARMM力场专用VDW修正
-rlist           = 1.2       ; 短程邻居列表截断（nm）
-rcoulomb        = 1.2       ; 静电截断（nm）
-rvdw            = 1.2       ; 范德华截断（nm）
-coulombtype     = PME       ; 粒子网格Ewald（长程静电）
-fourierspacing  = 0.12      ; PME网格间距（nm）
-pme-order       = 4         ; PME插值阶数
-
-; ---------------------
-; 温度/压力控制（离子添加时禁用）
-; ---------------------
-tcoupl          = no        ; 关闭温度耦合
-pcoupl          = no        ; 关闭压力耦合
-
-; ---------------------
-; 输出控制（最小化输出）
-; ---------------------
-nstxout         = 0         ; 不输出轨迹
-nstenergy       = 1         ; 每步输出能量（监控用）
-nstlog          = 1         ; 每步输出日志
+nstxout         = 0         ; 
+nstenergy       = 1         ; 
+nstlog          = 1         ; 
