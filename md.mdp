@@ -1,0 +1,71 @@
+; Production MD for Protein-FPP-MG system (CHARMM27 force field)
+; GROMACS 2023 format
+
+;=======================
+; RUN CONTROL
+;=======================
+integrator               = md        ; Leap-frog MD integrator
+dt                       = 0.002     ; Time step (ps) = 2 fs
+nsteps                   = 50000000  ; 100 ns (5000000 steps × 0.002 ps)
+nstxout                  = 5000      ; Save coordinates every 10 ps
+nstvout                  = 5000      ; Save velocities every 10 ps
+nstenergy                = 5000      ; Save energies every 10 ps
+nstlog                   = 5000      ; Update log file every 10 ps
+nstxout-compressed       = 5000      ; Save compressed trajectory every 10 ps
+
+;=======================
+; BOND CONSTRAINTS
+;=======================
+constraint-algorithm     = lincs     ; LINCS for bond constraints
+constraints              = h-bonds   ; Constrain all bonds involving H
+lincs-order              = 4         ; LINCS expansion order
+lincs-iter               = 1         ; LINCS iteration count
+lincs-warnangle          = 30        ; Warn if angle exceeds 30°
+
+;=======================
+; NEIGHBOR SEARCHING
+;=======================
+cutoff-scheme            = Verlet    ; Verlet cutoff scheme
+nstlist                  = 20        ; Update neighbor list every 20 steps
+pbc                      = xyz       ; 3D periodic boundary conditions
+verlet-buffer-tolerance  = 0.0001    ; Buffer tolerance (kJ/mol/ps)
+
+;=======================
+; ELECTROSTATICS & VDW
+;=======================
+coulombtype              = PME       ; Particle Mesh Ewald
+rcoulomb                 = 1.2       ; Coulomb cutoff (nm)
+vdwtype                  = Cutoff    ; Standard VdW cutoff
+rvdw                     = 1.2       ; VdW cutoff (nm)
+dispcorr                 = no        ; No dispersion correction (CHARMM27)
+fourierspacing           = 0.12      ; PME grid spacing (nm)
+pme-order                = 4         ; PME interpolation order
+
+;=======================
+; TEMPERATURE COUPLING
+;=======================
+tcoupl                   = v-rescale ; Velocity rescaling thermostat
+tc-grps                  = System    ; Couple entire system
+tau-t                    = 0.1       ; Thermostat time constant (ps)
+ref-t                    = 300       ; Target temperature (K)
+
+;=======================
+; PRESSURE COUPLING
+;=======================
+pcoupl                   = Parrinello-Rahman ; Pressure coupling
+pcoupltype               = isotropic ; Isotropic scaling
+tau-p                    = 2.0       ; Barostat time constant (ps)
+ref-p                    = 1.0       ; Reference pressure (bar)
+compressibility          = 4.5e-5    ; Water compressibility (bar⁻¹)
+
+;=======================
+; VELOCITY & POSITION
+;=======================
+gen-vel                  = no        ; Use velocities from NPT
+continuation             = yes       ; Continue from NPT state
+
+;=======================
+; OUTPUT CONTROL
+;=======================
+compressed-x-grps        = System    ; Save entire system in compressed trajectory
+compressed-x-precision   = 1000      ; Precision for compressed trajectory (multiplier)

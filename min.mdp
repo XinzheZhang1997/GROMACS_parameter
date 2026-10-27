@@ -1,0 +1,40 @@
+; CHARMM27力场能量最小化参数 (min.mdp)
+; 适用于蛋白质-小分子-离子复合体系
+; 生成命令：gmx grompp -f min.mdp -c solv_ions.gro -p topol.top -o em.tpr
+
+; ---------------------
+; 基本控制参数
+; ---------------------
+integrator      = steep     ; 算法：steep（最陡下降法，稳定性高）
+emtol           = 100.0     ; 最大力阈值（kJ/mol/nm），蛋白质通常100，小分子可设50
+emstep          = 0.01      ; 初始步长（nm），复杂体系建议0.01
+nsteps          = 50000     ; 最大步数（达到emtol则提前终止）
+
+; ---------------------
+; 能量项设置（CHARMM27兼容）
+; ---------------------
+
+constraints     = none       ; CHARMM27无需固定H键
+cutoff-scheme   = Verlet     ; 现代截断方案
+vdw-modifier    = Potential-shift ; CHARMM力场专用VDW修正
+rlist           = 1.2        ; 短程邻居列表截断（nm）
+rcoulomb        = 1.2        ; 静电截断（nm）
+rvdw            = 1.2        ; 范德华截断（nm）
+coulombtype     = PME        ; 粒子网格Ewald（长程静电）
+fourierspacing  = 0.12       ; PME网格间距（nm）
+pme-order       = 4          ; PME插值阶数
+
+; ---------------------
+; 温度/压力控制（EM时禁用）
+; ---------------------
+tcoupl          = no         ; 关闭温度耦合
+pcoupl          = no         ; 关闭压力耦合
+
+; ---------------------
+; 输出控制
+; ---------------------
+nstxout         = 100        ; 每100步输出一次结构（.trr）
+nstvout         = 0          ; 不输出速度
+nstfout         = 0          ; 不输出力
+nstenergy       = 100        ; 每100步输出一次能量
+nstlog          = 100        ; 每100步输出日志

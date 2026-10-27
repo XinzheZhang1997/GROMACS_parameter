@@ -1,0 +1,46 @@
+; NVT equilibration for Protein-FPP-MG system (CHARMM27 force field)
+; GROMACS 2023 format
+
+; Run control
+integrator               = md        ; Molecular dynamics integrator
+dt                       = 0.002     ; Time step (ps) = 2 fs
+nsteps                   = 50000     ; 100 ps (50,000 steps × 0.002 ps)
+nstxout                  = 5000      ; Save coordinates every 10 ps
+nstvout                  = 5000      ; Save velocities every 10 ps
+nstenergy                = 5000      ; Save energies every 10 ps
+nstlog                   = 5000      ; Update log file every 10 ps
+
+; Bond constraints
+constraint-algorithm     = lincs     ; LINCS for bond constraints
+constraints              = h-bonds   ; Constrain all bonds involving H
+lincs-order              = 4         ; LINCS expansion order
+lincs-iter               = 1         ; LINCS iteration count
+lincs-warnangle          = 30        ; Warn if angle exceeds 30°
+
+; Neighbor searching
+cutoff-scheme            = Verlet    ; Verlet cutoff scheme (recommended)
+ns-type                  = grid      ; Grid-based neighbor searching
+nstlist                  = 20        ; Update neighbor list every 20 steps
+pbc                      = xyz       ; 3D periodic boundary conditions
+verlet-buffer-tolerance  = 0.0001    ; Buffer tolerance (kJ/mol/ps)
+
+; Electrostatics and VdW
+coulombtype              = PME       ; Particle Mesh Ewald for electrostatics
+rcoulomb                 = 1.2       ; Coulomb cutoff (nm)
+vdwtype                  = Cutoff    ; Standard cutoff for VdW
+rvdw                     = 1.2       ; VdW cutoff (nm)
+dispcorr                 = no        ; No dispersion correction (CHARMM27)
+
+; Temperature coupling
+tcoupl                   = v-rescale ; Velocity rescaling thermostat
+tc-grps                  = System    ; Couple all groups separately
+ref-t                    = 300       ; Target temperature (K)
+tau-t                    = 0.1       ; Thermostat time constant (ps)
+
+; Pressure coupling (disabled for NVT)
+pcoupl                   = no        ; No pressure coupling in NVT
+
+; Velocity generation
+gen-vel                  = yes       ; Generate initial velocities
+gen-temp                 = 300       ; Initial temperature (K)
+gen-seed                 = -1        ; Random seed (-1 = randomize)
